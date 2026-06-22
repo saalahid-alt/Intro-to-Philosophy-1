@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zirconian Thinking: The Ultimate Philosophy Trial</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght=400;700&family=Playfair+Display:ital,wght=0,400;0,600;1,400&family=Plus+Jakarta+Sans:wght=400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f2edf4; /* Deep, crystal-tinted marble tone */
+            color: #26212b;
+        }
+        .serif-title {
+            font-family: 'Cinzel', serif;
+        }
+        .serif-body {
+            font-family: 'Playfair Display', serif;
+        }
+        .timer-bar {
+            transition: width 1s linear;
+        }
+        /* Flashcard 3D Flip Styles */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <header class="bg-[#1b1424] text-[#ebdffa] border-b-2 border-[#7a59a3] py-4 px-6 shadow-md sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto flex justify-between items-center">
+            <h1 class="serif-title text-xl tracking-widest font-bold flex items-center gap-2">
+                🔮 ZIRCONIAN THINKING
+            </h1>
+            <div id="userDisplay" class="text-sm italic hidden tracking-wide"></div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-4xl w-full mx-auto p-4 sm:p-6 my-4">
+
+        <section id="page-login" class="bg-white rounded-lg shadow-xl border border-purple-100 p-8 max-w-md mx-auto my-12 transition-all duration-300">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-[#ebdffa] text-[#1b1424] rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold border border-[#7a59a3]">Z</div>
+                <h2 class="serif-title text-2xl font-bold text-[#1b1424] tracking-wide">Enter the Mind Palace</h2>
+                <p class="text-sm text-gray-600 mt-2 italic">"Unpolished thoughts remain raw; crystalline precision takes work."</p>
+            </div>
+            <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs uppercase tracking-wider font-semibold text-gray-700 mb-1">Seeker's Name</label>
+                    <input type="text" id="inputName" required class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-[#7a59a3] bg-[#faf9fc]">
+                </div>
+                <div>
+                    <label class="block text-xs uppercase tracking-wider font-semibold text-gray-700 mb-1">Academy Section</label>
+                    <input type="text" id="inputSection" required class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-[#7a59a3] bg-[#faf9fc]">
+                </div>
+                <button type="submit" class="w-full bg-[#1b1424] hover:bg-[#2b203a] text-[#ebdffa] py-3 rounded font-medium tracking-widest uppercase text-xs border border-[#7a59a3] transition-colors mt-6 shadow">
+                    Awaken Cognition
+                </button>
+            </form>
+        </section>
+
+
+        <section id="page-reviewer" class="hidden bg-white rounded-lg shadow-xl border border-gray-200 p-6 sm:p-8 transition-all duration-300">
+            <h2 class="serif-title text-3xl font-bold text-[#1b1424] border-b pb-4 mb-4 tracking-wide text-center">The Crystal Pillars of Thought</h2>
+            
+            <p class="text-sm text-gray-600 mb-6 text-center italic">Interact with the flashcards below to learn the core definitions. Tap a card to flip between its core definition and relatable real-world archetypes.</p>
+
+            <div class="max-w-xl mx-auto mb-8">
+                <div class="perspective-1000 w-full min-h-[380px] cursor-pointer" onclick="flipReviewerCard()">
+                    <div id="flashcardInner" class="transform-style-3d w-full h-full relative rounded-xl shadow-lg border border-purple-200 min-h-[380px]">
+                        
+                        <div id="cardFront" class="backface-hidden absolute inset-0 w-full h-full rounded-xl p-8 flex flex-col justify-between transition-colors">
+                            <div>
+                                <div class="flex justify-between items-center mb-4">
+                                    <span id="cardBadgeFront" class="text-xs uppercase font-bold tracking-widest px-2.5 py-1 rounded">Concept</span>
+                                    <span class="text-xs font-semibold text-purple-400">📝 Core Definition</span>
+                                </div>
+                                <h3 id="cardTitleFront" class="serif-title text-2xl font-bold mb-4">Title Loading...</h3>
+                                <p id="cardDefinition" class="text-sm text-gray-700 leading-relaxed font-medium mt-2"></p>
+                            </div>
+                            <div class="text-center text-xs text-gray-400 font-medium italic border-t pt-4">
+                                🔄 Tap anywhere on the card to reveal Real-World Archetypes
+                            </div>
+                        </div>
+
+                        <div id="cardBack" class="backface-hidden rotate-y-180 absolute inset-0 w-full h-full rounded-xl p-6 sm:p-8 flex flex-col justify-between bg-white overflow-y-auto">
+                            <div>
+                                <div class="flex justify-between items-center mb-4">
+                                    <h4 id="cardTitleBack" class="serif-title text-lg font-bold">Archetypes</h4>
+                                    <span class="text-xs font-semibold text-amber-500">🔥 Real-World Scenarios</span>
+                                </div>
+                                <div id="cardExamplesContainer" class="space-y-2 text-xs text-gray-600">
+                                    </div>
+                            </div>
+                            <div class="text-center text-xs text-gray-400 font-medium italic border-t pt-4 mt-4 shrink-0">
+                                🔄 Tap anywhere on the card to return to Definition
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center mt-4 px-2">
+                    <button onclick="navigateReviewerCard(-1, event)" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded text-xs uppercase tracking-wider transition-colors">
+                        ← Previous
+                    </button>
+                    <span id="reviewerCardProgress" class="text-xs font-bold text-gray-500 uppercase tracking-widest">Card 1 of 3</span>
+                    <button onclick="navigateReviewerCard(1, event)" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded text-xs uppercase tracking-wider transition-colors">
+                        Next →
+                    </button>
+                </div>
+            </div>
+
+            <div class="mt-8 border border-purple-200 rounded-lg overflow-hidden shadow-sm">
+                <div class="bg-[#1b1424] text-[#ebdffa] py-2 px-4 font-bold tracking-wider text-xs uppercase serif-title">
+                    🏆 Zirconian Competitive Tier Divisions (Recalibrated for Streak Play)
+                </div>
+                <div class="p-4 bg-[#fcfbfe] text-xs grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2">
+                    <div class="flex justify-between items-center border-b pb-1">
+                        <span class="font-bold text-purple-900">👑 Divine Oracle I</span>
+                        <span class="font-mono bg-purple-100 text-purple-800 px-2 py-0.5 rounded font-bold">1150 - 1300 pts</span>
+                    </div>
+                    <div class="flex justify-between items-center border-b pb-1">
+                        <span class="font-bold text-blue-900">⚔️ Master Thinker I</span>
+                        <span class="font-mono bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-bold">950 - 1049 pts</span>
+                    </div>
+                    <div class="flex justify-between items-center border-b pb-1">
+                        <span class="font-bold text-purple-700">👑 Divine Oracle II</span>
+                        <span class="font-mono bg-purple-50 text-purple-700 px-2 py-0.5 rounded font-bold">1100 - 1149 pts</span>
+                    </div>
+                    <div class="flex justify-between items-center border-b pb-1">
+                        <span class="font-bold text-blue-700">⚔️ Master Thinker II</span>
+                        <span class="font-mono bg-blue-50 text-blue-700 px-2 py-0.5 rounded font-bold">850 - 949 pts</span>
+                    </div>
+                    <div class="flex justify-between items-center border-b pb-1">
+                        <span class="font-bold text-purple-500">👑 Divine Oracle III</span>
+                        <span class="font-mono bg-purple-50 text-purple-600 px-2 py-0.5 rounded font-bold">1050 - 1099 pts</span>
+                    </div>
+                    <div class="flex justify-between items-center border-b pb-1">
+                        <span class="font-bold text-blue-500">⚔️ Master Thinker III</span>
+                        <span class="font-mono bg-blue-50 text-blue-600 px-2 py-0.5 rounded font-bold">750 - 849 pts</span>
+                    </div>
+                    <div class="flex justify-between items-center border-b pb-1 md:border-none md:pb-0">
+                        <span class="font-bold text-amber-900">📜 Wandering Sage I</span>
+                        <span class="font-mono bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-bold">650 - 749 pts</span>
+                    </div>
+                    <div class="flex justify-between items-center border-b pb-1 md:border-none md:pb-0">
+                        <span class="font-bold text-gray-800">🌑 Unreflective Novice I</span>
+                        <span class="font-mono bg-gray-200 text-gray-800 px-2 py-0.5 rounded font-bold">350 - 499 pts</span>
+                    </div>
+                    <div class="flex justify-between items-center border-b pb-1 md:border-none md:pb-0">
+                        <span class="font-bold text-amber-700">📜 Wandering Sage II</span>
+                        <span class="font-mono bg-amber-50 text-amber-700 px-2 py-0.5 rounded font-bold">580 - 649 pts</span>
+                    </div>
+                    <div class="flex justify-between items-center border-b pb-1 md:border-none md:pb-0">
+                        <span class="font-bold text-gray-600">🌑 Unreflective Novice II</span>
+                        <span class="font-mono bg-gray-100 text-gray-600 px-2 py-0.5 rounded font-bold">150 - 349 pts</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-amber-600">📜 Wandering Sage III</span>
+                        <span class="font-mono bg-amber-50 text-amber-600 px-2 py-0.5 rounded font-bold">500 - 579 pts</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-gray-400">🌑 Unreflective Novice III</span>
+                        <span class="font-mono bg-gray-50 text-gray-400 px-2 py-0.5 rounded font-bold">0 - 149 pts</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 bg-purple-50 p-4 border border-purple-100 rounded text-xs text-gray-600">
+                <strong>Trial Rules & Streak Multipliers:</strong> 10 situational items with a continuous 15s timer. Correct hits yield 50 base pts + speed bonuses. 
+                🔥 <strong>Streak Mechanics:</strong> 3 consecutive correct hits unlocks <strong>+15 pts Streak Bonus</strong>. 5+ consecutive correct hits unlocks <strong>+30 pts Hot Streak</strong> per item! Missing a question or timing out breaks your streak completely.
+            </div>
+
+            <div class="mt-8 flex justify-end">
+                <button onclick="startQuestGame()" class="bg-[#1b1424] hover:bg-[#2b203a] text-[#ebdffa] px-6 py-3 rounded font-medium tracking-widest uppercase text-xs border border-[#7a59a3] transition-colors shadow">
+                    Initiate Zirconian Trial →
+                </button>
+            </div>
+        </section>
+
+
+        <section id="page-quiz" class="hidden bg-white rounded-lg shadow-xl border border-purple-100 p-6 sm:p-8 transition-all duration-300">
+            <div class="flex justify-between items-center border-b pb-4 mb-6">
+                <div>
+                    <span class="text-xs uppercase tracking-widest font-bold text-gray-400">Trial Progression</span>
+                    <div class="serif-title text-lg font-bold text-[#1b1424]" id="questionProgressCounter">Question 1 of 10</div>
+                </div>
+                <div id="quizStreakContainer" class="hidden bg-amber-50 border border-amber-200 px-3 py-1 rounded-full flex items-center gap-1.5 animate-pulse">
+                    <span class="text-sm">🔥</span>
+                    <span id="quizStreakText" class="text-xs font-bold text-amber-800 uppercase tracking-wider">Streak: 0</span>
+                </div>
+                <div class="text-right">
+                    <span class="text-xs uppercase tracking-widest font-bold text-gray-400">Cumulative Score</span>
+                    <div class="serif-title text-lg font-bold text-[#7a59a3]" id="gameScoreCounter">0 pts</div>
+                </div>
+            </div>
+
+            <div class="w-full bg-gray-100 h-2 rounded-full mb-6 overflow-hidden relative">
+                <div id="timerProgressBar" class="bg-gradient-to-r from-[#7a59a3] to-[#1b1424] h-full w-full timer-bar"></div>
+            </div>
+            <div class="text-right text-xs font-semibold text-gray-500 -mt-4 mb-6" id="timerNumericDisplay">Time Remaining: 15s</div>
+
+            <div class="bg-[#faf9fc] border border-purple-50 rounded-lg p-6 mb-6">
+                <p id="scenarioTextContent" class="serif-body text-lg text-gray-800 leading-relaxed font-medium"></p>
+            </div>
+
+            <div id="quizOptionsContainer" class="space-y-3">
+                <button id="btn-choice-impulsive" onclick="submitGameAnswer('impulsive')" class="quiz-choice-btn w-full text-left p-4 border border-gray-200 hover:border-[#7a59a3] hover:bg-purple-50/50 rounded-lg font-medium transition-all duration-150 flex items-center justify-between group">
+                    <span class="text-gray-700 group-hover:text-purple-950 font-semibold">⚡ Impulsive Action</span>
+                    <span class="text-xs text-purple-400 font-normal italic opacity-0 group-hover:opacity-100 transition-opacity">Select Archetype</span>
+                </button>
+                <button id="btn-choice-partial" onclick="submitGameAnswer('partial')" class="quiz-choice-btn w-full text-left p-4 border border-gray-200 hover:border-[#7a59a3] hover:bg-purple-50/50 rounded-lg font-medium transition-all duration-150 flex items-center justify-between group">
+                    <span class="text-gray-700 group-hover:text-purple-950 font-semibold">🔍 Partial Thinking</span>
+                    <span class="text-xs text-purple-400 font-normal italic opacity-0 group-hover:opacity-100 transition-opacity">Select Archetype</span>
+                </button>
+                <button id="btn-choice-holistic" onclick="submitGameAnswer('holistic')" class="quiz-choice-btn w-full text-left p-4 border border-gray-200 hover:border-[#7a59a3] hover:bg-purple-50/50 rounded-lg font-medium transition-all duration-150 flex items-center justify-between group">
+                    <span class="text-gray-700 group-hover:text-purple-950 font-semibold">🌐 Holistic Thinking</span>
+                    <span class="text-xs text-purple-400 font-normal italic opacity-0 group-hover:opacity-100 transition-opacity">Select Archetype</span>
+                </button>
+            </div>
+
+            <div id="explanationPanel" class="hidden mt-6 p-5 rounded-lg border transition-all duration-300">
+                <div class="flex items-center gap-2 mb-2">
+                    <span id="explanationStatusIcon" class="text-xl"></span>
+                    <h4 id="explanationHeader" class="serif-title font-bold text-sm uppercase tracking-wider"></h4>
+                </div>
+                <p id="explanationText" class="text-xs text-gray-700 leading-relaxed font-medium"></p>
+                
+                <div class="mt-4 pt-4 border-t border-gray-100 flex justify-end">
+                    <button onclick="advanceToNextQuestion()" class="bg-[#1b1424] hover:bg-[#2b203a] text-[#ebdffa] px-5 py-2.5 rounded font-semibold uppercase text-xs tracking-wider border border-[#7a59a3] transition-colors shadow">
+                        Advance to Next Trial →
+                    </button>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="page-results" class="hidden bg-white rounded-lg shadow-xl border border-purple-100 p-6 sm:p-8 transition-all duration-300">
+            <div class="text-center border-b pb-6 mb-6">
+                <h2 class="serif-title text-2xl font-bold text-[#1b1424] tracking-wide">Trial Concluded</h2>
+                <p class="text-xs text-gray-500 mt-1" id="gameTimestampDisplay"></p>
+                
+                <div class="my-6 inline-block bg-gradient-to-b from-[#faf9fc] to-[#f4edf8] border-2 border-[#7a59a3] rounded-xl px-8 py-6 shadow-md max-w-sm w-full">
+                    <span class="text-xs uppercase font-bold tracking-widest text-gray-400 block mb-1">Achieved Rank Elevation</span>
+                    <h3 class="serif-title text-2xl font-bold text-purple-950 tracking-wide" id="rankTitleDisplay">---</h3>
+                    <div class="w-full border-t border-dashed border-purple-200 my-3"></div>
+                    <span class="text-xs text-gray-500 block">Acquired Philosophical Reward:</span>
+                    <span class="font-semibold text-sm text-[#7a59a3]" id="rewardArtifactDisplay">---</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 max-w-sm mx-auto">
+                    <div class="bg-purple-50/50 p-3 rounded border border-purple-100">
+                        <span class="text-[10px] uppercase font-bold tracking-wider text-gray-400 block">Raw Accuracy</span>
+                        <span class="serif-title font-bold text-lg text-gray-800" id="rawAccuracyDisplay">0 / 10 items</span>
+                    </div>
+                    <div class="bg-purple-50/50 p-3 rounded border border-purple-100">
+                        <span class="text-[10px] uppercase font-bold tracking-wider text-gray-400 block">Crystalline Points</span>
+                        <span class="serif-title font-bold text-lg text-[#7a59a3]" id="finalPointsDisplay">0 pts</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-8 p-4 bg-gray-50 rounded border border-gray-200">
+                <span class="text-xs uppercase tracking-wider font-bold text-gray-500 block mb-2 text-center">Zirconian Evaluation Scale Reference Map</span>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10px] text-gray-600">
+                    <div class="p-2 border rounded bg-white text-center">
+                        <span class="font-bold text-purple-900 block">Divine Oracle</span>
+                        I: 1150+<br>II: 1100+<br>III: 1050+
+                    </div>
+                    <div class="p-2 border rounded bg-white text-center">
+                        <span class="font-bold text-blue-900 block">Master Thinker</span>
+                        I: 950+<br>II: 850+<br>III: 750+
+                    </div>
+                    <div class="p-2 border rounded bg-white text-center">
+                        <span class="font-bold text-amber-900 block">Wandering Sage</span>
+                        I: 650+<br>II: 580+<br>III: 500+
+                    </div>
+                    <div class="p-2 border rounded bg-white text-center">
+                        <span class="font-bold text-gray-600 block">Unreflective Novice</span>
+                        I: 350+<br>II: 150+<br>III: 0+
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-[#fcfbfa] border-l-4 border-[#7a59a3] p-5 mb-8 rounded-r">
+                <h4 class="serif-title font-bold text-sm text-[#1b1424] mb-2 flex items-center gap-2">
+                    📥 Academy Submission Protocol
+                </h4>
+                <ul class="text-xs text-gray-600 space-y-2 list-disc list-inside">
+                    <li>Generate your verified file signature block by checking <strong>"Extract Accomplishment PDF"</strong>.</li>
+                    <li>Verify document file tags precisely map to: <code class="bg-gray-100 px-1 py-0.5 rounded text-black font-mono">Name_Section_ZirconianThinking.pdf</code>.</li>
+                    <li>Transmit file directly via upload to the institutional Google Drive infrastructure: <a href="https://drive.google.com/drive/folders/1awtpNwpy_0d07ZCJtJq2sETns1NWL_SJ?usp=sharing" target="_blank" class="text-blue-700 font-semibold underline hover:text-blue-900 inline-flex items-center gap-0.5">Access Repository ↗️</a>.</li>
+                </ul>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                <button onclick="generateGamifiedPDF()" class="bg-[#7a59a3] hover:bg-[#634685] text-white px-5 py-3 rounded font-medium tracking-widest uppercase text-xs flex items-center justify-center gap-2 transition-colors shadow">
+                    📄 Extract Accomplishment PDF
+                </button>
+                <a href="https://drive.google.com/drive/folders/1awtpNwpy_0d07ZCJtJq2sETns1NWL_SJ?usp=sharing" target="_blank" class="bg-[#1b1424] hover:bg-[#2b203a] text-[#ebdffa] px-5 py-3 rounded font-medium tracking-widest uppercase text-xs flex items-center justify-center gap-2 transition-colors border border-[#7a59a3] shadow">
+                    ↗️ Upload To Google Drive
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-[#1b1424] text-purple-300 text-center py-4 text-[10px] tracking-widest uppercase border-t border-purple-950">
+        "Nosce te ipsum — Crystalize your perspective."
+    </footer>
+
+    <script>
+        // System Data Storage Structures
+        let userData = { name: '', section: '', cumulativePoints: 0, rawCorrectItems: 0 };
+        let activeQuestionIndex = 0;
+        let questionTimerObj = null;
+        let elapsedSecondsOnCurrentQuestion = 0;
+        let runningStreakCounter = 0; // Tracks consecutive correct entries
+        const totalDurationMax = 15;
+
+        // Flashcard System State Configuration
+        let activeFlashcardIndex = 0;
+        let isFlashcardFlipped = false;
+
+        // Flashcard Content Master Matrix
+        const flashcardConcepts = [
+            {
+                title: "⚡ Impulsive Action",
+                badgeColorFront: "bg-red-100 text-red-800",
+                bgFront: "bg-red-50/60 border border-red-200",
+                definition: "Immediate, unreflective behavioral responses governed entirely by raw emotional stimuli, instant gratification, or primal instincts lacking rational filters.",
+                archetypes: [
+                    "<strong>The Gamer:</strong> Instantly smashing a gaming controller to pieces after losing a closely contested ranked match.",
+                    "<strong>The Shopper:</strong> Checking a social media app, seeing a trendy, overpriced hoodie, and buying it on credit without checking your balance.",
+                    "<strong>The Communicator:</strong> Sending a nasty, defensive paragraph of texts to a friend right after an argument instead of putting the phone down.",
+                    "<strong>The Binge-Watcher:</strong> Staying up until 4:00 AM streaming a series even though your alarm goes off for a crucial final exam at 7:00 AM.",
+                    "<strong>The Social Media User:</strong> Instantly reposting a dramatic, unverified call-out post on TikTok just because it popped up on your FYP."
+                ]
+            },
+            {
+                title: "🔍 Partial Thinking",
+                badgeColorFront: "bg-amber-100 text-amber-800",
+                bgFront: "bg-amber-50/60 border border-amber-200",
+                definition: "An isolated focus on singular localized elements of a complex situation while remaining structurally oblivious or actively indifferent to intersecting realities.",
+                archetypes: [
+                    "<strong>The Student:</strong> Blaming your groupmate for a bad grade because they missed a meeting, without noticing they were dealing with a family emergency.",
+                    "<strong>The Athlete:</strong> Accusing a coach of favoritism for putting you on the bench, completely ignoring your own recent missed practices and lack of condition.",
+                    "<strong>The Friend:</strong> Assuming your close friend hates you because they left you on 'read,' missing the fact that they are burnt out from working an 8-hour shift.",
+                    "<strong>The Creator:</strong> Declaring that an algorithm is broken because a single post didn't perform well, without looking at the drop in content quality.",
+                    "<strong>The Casual Debate:</strong> Deciding a new campus policy is terrible simply because it slightly adjusts library hours, ignoring that it frees up funds for mental health support."
+                ]
+            },
+            {
+                title: "🌐 Holistic Thinking",
+                badgeColorFront: "bg-emerald-100 text-emerald-800",
+                bgFront: "bg-emerald-50/60 border border-emerald-200",
+                definition: "The expansive critical paradigm that looks at all integrated variables, parsing dynamic patterns and global systems before generating structural assertions.",
+                archetypes: [
+                    "<strong>The Academic Leader:</strong> Looking at a failing student by evaluating their sleep habits, study environment, mental health, and family dynamics altogether.",
+                    "<strong>The Career Mindset:</strong> Deciding on a college degree path by mapping out your true interests, job market trends, tuition costs, and long-term daily happiness.",
+                    "<strong>The Mediator:</strong> Resolving a massive friend group fallout by sitting everyone down to hear every side, understanding the history, and finding a shared fix.",
+                    "<strong>The Smart Tech User:</strong> Evaluating a device upgrade by checking the global supply chains, e-waste footprint, cost, and true functional necessity.",
+                    "<strong>The Wellness Journey:</strong> Tackling persistent low energy by analyzing your diet, stress levels, screentime habits, social life, and exercise routine as a whole system."
+                ]
+            }
+        ];
+
+        // Fully Customized 10 Scenario Matrix targeted to Student / Young Adult experiences + Analytical Explanations
+        const gameScenarios = [
+            { id: 1, text: "Seeing a viral post about an unverified campus cancel-culture rumor, you immediately comment an aggressive insult on the student's profile without looking for facts.", correct: "impulsive", rationale: "This action is triggered purely by an immediate, raw emotional reaction to online content. There is no reflection or attempt to verify truth before acting, matching the core definition of an Impulsive Action." },
+            { id: 2, text: "A group project leader schedules assignments only after mapping out everyone's heavy course loads, part-time work shifts, personal mental health, and individual tech access.", correct: "holistic", rationale: "The leader refuses to view the team as simple cogs. By evaluating interlocking realities (mental health, schedules, tech boundaries) as an interconnected system, this represents complete Holistic Thinking." },
+            { id: 3, text: "You accuse your best friend of ghosting and breaking up your friendship simply because they haven't replied to your text for six hours, ignoring their tough schedule.", correct: "partial", rationale: "This is a classic example of Partial Thinking. It centers exclusively on one isolated data point (the delayed reply) while completely ignoring intersecting situational factors like work burnout or external stress." },
+            { id: 4, text: "Feeling intensely bored while studying at midnight, you click on an ad and instantly drop $150 on sneaker pre-orders using cash meant for next month's dorm rent.", correct: "impulsive", rationale: "Driven strictly by a search for immediate stimulation to escape midnight boredom, this financial choice ignores long-term budget demands, making it entirely an Impulsive Action." },
+            { id: 5, text: "An athlete argues their coach is completely corrupt for benching them, refusing to consider their own missed practices and low academic grades.", correct: "partial", rationale: "The athlete selectively focuses on the coach's negative choice while remaining blind to their own failures in attendance and grades, blocking out key variables (Partial Thinking)." },
+            { id: 6, text: "A student choosing a college major maps out their personal skill matches, future employment stats, projected tuition debt burdens, and long-term daily happiness.", correct: "holistic", rationale: "Instead of choosing based on prestige or salary alone, the student evaluates internal satisfaction, market dynamics, and financial weight together, constructing a deep Holistic approach." },
+            { id: 7, text: "A student council patterns a campus event by surveying diverse student sub-cultures, calculating food vendor environmental footprints, checking accessibility ramps, and reviewing historic budget records.", correct: "holistic", rationale: "This process models organizational Holistic Thinking. It purposefully balances inclusion, ecological safety, physical accessibility, and financial reality into a singular working matrix." },
+            { id: 8, text: "Losing a close ranked competitive matchmaking game, a gamer violently punches their desk, instantly shattering an expensive mechanical keyboard in raw frustration.", correct: "impulsive", rationale: "This physical outburst is entirely instinctual and emotionally unregulated. It features zero rational filters or consideration of consequences, labeling it an Impulsive Action." },
+            { id: 9, text: "A content creator decides an entire social platform algorithm is broken because one video flopped, ignoring changes in user trends and video production values.", correct: "partial", rationale: "By blaming the entire algorithm based on a single failed post, the creator uses Partial Thinking, systematically ignoring other variables like changing audience interests and production quality." },
+            { id: 10, text: "An individual addresses persistent burnout by revamping their entire lifestyle—fixing daily sleep routines, adjusting nutrient intakes, managing social screen limits, and scheduling therapy sessions.", correct: "holistic", rationale: "Instead of relying on a superficial quick-fix, the individual treats burnout as a complex systemic issue, modifying physical, digital, and emotional variables altogether (Holistic Thinking)." }
+        ];
+
+        function handleLogin(event) {
+            event.preventDefault();
+            userData.name = document.getElementById('inputName').value.trim();
+            userData.section = document.getElementById('inputSection').value.trim();
+            
+            document.getElementById('userDisplay').innerText = `Scholar: ${userData.name} | Class: ${userData.section}`;
+            document.getElementById('userDisplay').classList.remove('hidden');
+            
+            hideAllAppPages();
+            document.getElementById('page-reviewer').classList.remove('hidden');
+            initializeFlashcardUI();
+            window.scrollTo(0,0);
+        }
+
+        function hideAllAppPages() {
+            ['page-login', 'page-reviewer', 'page-quiz', 'page-results'].forEach(pageId => {
+                document.getElementById(pageId).classList.add('hidden');
+            });
+        }
+
+        /* FLASHCARD ENGINE FUNCTIONAL IMPLEMENTATION */
+        function initializeFlashcardUI() {
+            isFlashcardFlipped = false;
+            document.getElementById('flashcardInner').classList.remove('rotate-y-180');
+            
+            const activeCard = flashcardConcepts[activeFlashcardIndex];
+            
+            // Build Front Face Configuration
+            const frontEl = document.getElementById('cardFront');
+            frontEl.className = `backface-hidden absolute inset-0 w-full h-full rounded-xl p-8 flex flex-col justify-between transition-colors bg-white ${activeCard.bgFront}`;
+            
+            const badgeFront = document.getElementById('cardBadgeFront');
+            badgeFront.innerText = activeCard.title.split(' ')[1] + " " + activeCard.title.split(' ')[2];
+            badgeFront.className = `text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 rounded ${activeCard.badgeColorFront}`;
+            
+            document.getElementById('cardTitleFront').innerText = activeCard.title;
+            document.getElementById('cardDefinition').innerText = activeCard.definition;
+            
+            // Build Back Face Configuration
+            document.getElementById('cardTitleBack').innerText = `${activeCard.title.split(' ')[0]} ${activeCard.title.split(' ')[1]} Archetypes`;
+            
+            const examplesContainer = document.getElementById('cardExamplesContainer');
+            examplesContainer.innerHTML = '';
+            activeCard.archetypes.forEach(archetypeText => {
+                const itemEl = document.createElement('p');
+                itemEl.className = "pb-1 border-b border-gray-100 last:border-0";
+                itemEl.innerHTML = `• ${archetypeText}`;
+                examplesContainer.appendChild(itemEl);
+            });
+            
+            // Render Pagination Counts
+            document.getElementById('reviewerCardProgress').innerText = `Concept ${activeFlashcardIndex + 1} of ${flashcardConcepts.length}`;
+        }
+
+        function flipReviewerCard() {
+            isFlashcardFlipped = !isFlashcardFlipped;
+            const cardInner = document.getElementById('flashcardInner');
+            if (isFlashcardFlipped) {
+                cardInner.classList.add('rotate-y-180');
+            } else {
+                cardInner.classList.remove('rotate-y-180');
+            }
+        }
+
+        function navigateReviewerCard(directionOffset, event) {
+            // Event bubbling safeguard block
+            event.stopPropagation();
+            
+            activeFlashcardIndex += directionOffset;
+            if (activeFlashcardIndex < 0) {
+                activeFlashcardIndex = flashcardConcepts.length - 1;
+            } else if (activeFlashcardIndex >= flashcardConcepts.length) {
+                activeFlashcardIndex = 0;
+            }
+            initializeFlashcardUI();
+        }
+
+        /* QUIZ GAME ENGINE PROTOCOLS */
+        function startQuestGame() {
+            hideAllAppPages();
+            document.getElementById('page-quiz').classList.remove('hidden');
+            activeQuestionIndex = 0;
+            userData.cumulativePoints = 0;
+            userData.rawCorrectItems = 0;
+            runningStreakCounter = 0;
+            updateStreakUI();
+            loadTargetQuestionItem();
+        }
+
+        function loadTargetQuestionItem() {
+            if (activeQuestionIndex >= gameScenarios.length) {
+                concludeQuestEvaluation();
+                return;
+            }
+            
+            // Clear past mid-game explanation parameters
+            document.getElementById('explanationPanel').classList.add('hidden');
+            toggleQuizChoiceButtons(false);
+            
+            clearInterval(questionTimerObj);
+            elapsedSecondsOnCurrentQuestion = 0;
+            
+            document.getElementById('questionProgressCounter').innerText = `Question ${activeQuestionIndex + 1} of ${gameScenarios.length}`;
+            document.getElementById('gameScoreCounter').innerText = `${userData.cumulativePoints} pts`;
+            document.getElementById('scenarioTextContent').innerText = gameScenarios[activeQuestionIndex].text;
+            
+            resetTimerProgressBarUI();
+            questionTimerObj = setInterval(processTimerTickInterval, 1000);
+        }
+
+        function resetTimerProgressBarUI() {
+            const bar = document.getElementById('timerProgressBar');
+            bar.style.width = '100%';
+            document.getElementById('timerNumericDisplay').innerText = `Time Remaining: ${totalDurationMax}s`;
+        }
+
+        function processTimerTickInterval() {
+            elapsedSecondsOnCurrentQuestion++;
+            const remaining = totalDurationMax - elapsedSecondsOnCurrentQuestion;
+            
+            const bar = document.getElementById('timerProgressBar');
+            const percent = (remaining / totalDurationMax) * 100;
+            bar.style.width = `${percent}%`;
+            document.getElementById('timerNumericDisplay').innerText = `Time Remaining: ${remaining}s`;
+
+            if (remaining <= 0) {
+                clearInterval(questionTimerObj);
+                submitGameAnswer('timeout');
+            }
+        }
+
+        function updateStreakUI() {
+            const container = document.getElementById('quizStreakContainer');
+            const label = document.getElementById('quizStreakText');
+            if (runningStreakCounter > 0) {
+                container.classList.remove('hidden');
+                if (runningStreakCounter >= 5) {
+                    label.innerText = `HOT STREAK: ${runningStreakCounter} (+30)`;
+                    container.className = "bg-red-50 border border-red-200 px-3 py-1 rounded-full flex items-center gap-1.5 animate-pulse";
+                } else if (runningStreakCounter >= 3) {
+                    label.innerText = `STREAK: ${runningStreakCounter} (+15)`;
+                    container.className = "bg-amber-50 border border-amber-200 px-3 py-1 rounded-full flex items-center gap-1.5 animate-pulse";
+                } else {
+                    label.innerText = `STREAK: ${runningStreakCounter}`;
+                    container.className = "bg-purple-50 border border-purple-200 px-3 py-1 rounded-full flex items-center gap-1.5";
+                }
+            } else {
+                container.classList.add('hidden');
+            }
+        }
+
+        function toggleQuizChoiceButtons(shouldDisable) {
+            const buttons = document.querySelectorAll('.quiz-choice-btn');
+            buttons.forEach(btn => {
+                btn.disabled = shouldDisable;
+                if (shouldDisable) {
+                    btn.classList.add('opacity-50', 'cursor-not-allowed');
+                } else {
+                    btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    // Reset custom highlighting borders
+                    btn.classList.remove('border-emerald-500', 'bg-emerald-50', 'border-red-500', 'bg-red-50');
+                }
+            });
+        }
+
+        function submitGameAnswer(selectedStrategy) {
+            clearInterval(questionTimerObj);
+            toggleQuizChoiceButtons(true);
+            
+            const targetItem = gameScenarios[activeQuestionIndex];
+            targetItem.userSelectedInput = selectedStrategy;
+            
+            const isCorrect = (selectedStrategy === targetItem.correct);
+            
+            if (isCorrect) {
+                userData.rawCorrectItems++;
+                runningStreakCounter++;
+                
+                // Base speed calculation logic
+                const velocityBonusModifier = Math.max(0, totalDurationMax - elapsedSecondsOnCurrentQuestion);
+                let computedYieldValue = 50 + (velocityBonusModifier * 3.33); 
+                
+                // Add streak bonus points
+                let calculatedBonusPoints = 0;
+                if (runningStreakCounter >= 5) {
+                    calculatedBonusPoints = 30;
+                } else if (runningStreakCounter >= 3) {
+                    calculatedBonusPoints = 15;
+                }
+                
+                computedYieldValue += calculatedBonusPoints;
+                const standardizedPointAllocation = Math.round(computedYieldValue);
+                
+                userData.cumulativePoints += standardizedPointAllocation;
+                targetItem.pointsEarned = standardizedPointAllocation;
+                targetItem.streakBonusApplied = calculatedBonusPoints;
+                targetItem.isCorrect = true;
+                
+                // Highlight choice button green
+                document.getElementById(`btn-choice-${selectedStrategy}`).classList.add('border-emerald-500', 'bg-emerald-50');
+            } else {
+                runningStreakCounter = 0; // Streak broken instantly
+                targetItem.pointsEarned = 0;
+                targetItem.streakBonusApplied = 0;
+                targetItem.isCorrect = false;
+                if(selectedStrategy === 'timeout') {
+                    targetItem.userSelectedInput = "TIMEOUT (NO RESPONSE)";
+                } else {
+                    // Highlight selected incorrect button red
+                    document.getElementById(`btn-choice-${selectedStrategy}`).classList.add('border-red-500', 'bg-red-50');
+                }
+            }
+
+            updateStreakUI();
+            exposeExplanationPanel(isCorrect, targetItem);
+        }
+
+        function exposeExplanationPanel(isCorrect, itemObj) {
+            const panel = document.getElementById('explanationPanel');
+            const icon = document.getElementById('explanationStatusIcon');
+            const header = document.getElementById('explanationHeader');
+            const bodyText = document.getElementById('explanationText');
+            
+            if (isCorrect) {
+                panel.className = "mt-6 p-5 rounded-lg border border-emerald-200 bg-emerald-50/50 transition-all duration-300";
+                icon.innerText = "✨";
+                header.innerText = `Correct! (+${itemObj.pointsEarned} pts)`;
+                header.className = "serif-title font-bold text-sm uppercase tracking-wider text-emerald-900";
+            } else {
+                panel.className = "mt-6 p-5 rounded-lg border border-red-200 bg-red-50/50 transition-all duration-300";
+                icon.innerText = "❌";
+                header.innerText = itemObj.userSelectedInput.includes("TIMEOUT") ? "Time Expired! (0 pts)" : "Incorrect Option (0 pts)";
+                header.className = "serif-title font-bold text-sm uppercase tracking-wider text-red-900";
+            }
+            
+            // Inject structural logic text
+            bodyText.innerHTML = `<strong>Correct Archetype:</strong> <span class="uppercase font-bold">${itemObj.correct}</span><br><br>${itemObj.rationale}`;
+            panel.classList.remove('hidden');
+        }
+
+        function advanceToNextQuestion() {
+            activeQuestionIndex++;
+            loadTargetQuestionItem();
+        }
+
+        // Tier Assignment Scale Engine (Valorant Style)
+        function calculateRankProfile(pointsValue) {
+            if (pointsValue >= 1150) {
+                return { rank: "The Divine Oracle I", artifact: "Perfect Radiant Crown of Absolute Reality" };
+            } else if (pointsValue >= 1100) {
+                return { rank: "The Divine Oracle II", artifact: "Aura of Pristine Transcendence" };
+            } else if (pointsValue >= 1050) {
+                return { rank: "The Divine Oracle III", artifact: "Crystalline Sigil of Supreme Perspective" };
+            } else if (pointsValue >= 950) {
+                return { rank: "The Master Thinker I", artifact: "Polished Prism of Flawless Logic" };
+            } else if (pointsValue >= 850) {
+                return { rank: "The Master Thinker II", artifact: "Gleaming Focus Matrix" };
+            } else if (pointsValue >= 750) {
+                return { rank: "The Master Thinker III", artifact: "Refined Lens of Rational Deduction" };
+            } else if (pointsValue >= 650) {
+                return { rank: "The Wandering Sage I", artifact: "Sharpened Shard of Critical Reflection" };
+            } else if (pointsValue >= 580) {
+                return { rank: "The Wandering Sage II", artifact: "Unrefined Crystal of Insight" };
+            } else if (pointsValue >= 500) {
+                return { rank: "The Wandering Sage III", artifact: "Flickering Torch of Inquiry" };
+            } else if (pointsValue >= 350) {
+                return { rank: "The Unreflective Novice I", artifact: "Slightly Fogged Monocle of Truth" };
+            } else if (pointsValue >= 150) {
+                return { rank: "The Unreflective Novice II", artifact: "Dimly Lit Candle of Thought" };
+            } else {
+                return { rank: "The Unreflective Novice III", artifact: "Cracked Mirror of Impulsive Echoes" };
+            }
+        }
+
+        function concludeQuestEvaluation() {
+            hideAllAppPages();
+            document.getElementById('page-results').classList.remove('hidden');
+            
+            const evaluationProfile = calculateRankProfile(userData.cumulativePoints);
+            userData.achievedRank = evaluationProfile.rank;
+            userData.assignedArtifact = evaluationProfile.artifact;
+
+            document.getElementById('rankTitleDisplay').innerText = userData.achievedRank;
+            document.getElementById('rewardArtifactDisplay').innerText = userData.assignedArtifact;
+            document.getElementById('rawAccuracyDisplay').innerText = `${userData.rawCorrectItems} / 10 items`;
+            document.getElementById('finalPointsDisplay').innerText = `${userData.cumulativePoints} pts`;
+            document.getElementById('gameTimestampDisplay').innerText = `Concluded on: ${new Date().toLocaleString()}`;
+        }
+
+        // Dynamic PDF Construction Suite (Explanations deliberately ignored per requirements)
+        function generateGamifiedPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+            const baseDark = "#1b1424";
+            
+            // Header
+            doc.setFillColor(27, 20, 36);
+            doc.rect(0, 0, 210, 40, 'F');
+            doc.setTextColor(235, 223, 250);
+            doc.setFont("times", "bold");
+            doc.setFontSize(20);
+            doc.text("ZIRCONIAN THINKING ASSESSMENT CERTIFICATE", 15, 25);
+            
+            doc.setDrawColor(122, 89, 163);
+            doc.setLineWidth(1.2);
+            doc.line(0, 40, 210, 40);
+            
+            // Student Metadata
+            doc.setTextColor(40, 40, 40);
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(10);
+            doc.text(`Scholar Moniker:`, 15, 52);
+            doc.setFont("helvetica", "bold");
+            doc.text(`${userData.name}`, 48, 52);
+            doc.setFont("helvetica", "normal");
+            doc.text(`Institutional Section:`, 15, 58);
+            doc.setFont("helvetica", "bold");
+            doc.text(`${userData.section}`, 48, 58);
+            doc.setFont("helvetica", "normal");
+            doc.text(`Evaluation Timestamp:`, 120, 52);
+            doc.text(`${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`, 160, 52);
+
+            // Large Badge
+            doc.setFillColor(248, 244, 252);
+            doc.rect(120, 56, 75, 26, 'F');
+            doc.setDrawColor(195, 180, 215);
+            doc.rect(120, 56, 75, 26, 'S');
+            doc.setFont("times", "bold");
+            doc.setFontSize(9);
+            doc.text("ELEVATION RANK:", 124, 63);
+            doc.setFontSize(12);
+            doc.setTextColor(54, 15, 89);
+            doc.text(`${userData.achievedRank.toUpperCase()}`, 124, 69);
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(8);
+            doc.setTextColor(40, 40, 40);
+            doc.text(`Points Value: ${userData.cumulativePoints} pts | Accuracy: ${userData.rawCorrectItems}/10`, 124, 76);
+
+            doc.setDrawColor(210, 210, 210);
+            doc.setLineWidth(0.3);
+            doc.line(15, 88, 195, 88);
+            
+            doc.setTextColor(baseDark);
+            doc.setFont("times", "bold");
+            doc.setFontSize(13);
+            doc.text("Chronicle of Situational Logic Trials (Streak Audited)", 15, 96);
+            
+            let yPositionAxis = 104;
+            doc.setFontSize(9);
+            
+            gameScenarios.forEach((item, index) => {
+                if (yPositionAxis > 260) {
+                    doc.addPage();
+                    yPositionAxis = 22;
+                }
+                
+                doc.setFont("helvetica", "bold");
+                doc.setTextColor(50, 50, 50);
+                doc.text(`Trial ${index + 1}:`, 15, yPositionAxis);
+                
+                doc.setFont("helvetica", "normal");
+                const multiLineSplits = doc.splitTextToSize(item.text, 155);
+                doc.text(multiLineSplits, 35, yPositionAxis);
+                yPositionAxis += (multiLineSplits.length * 4.5);
+                
+                doc.text("Selected Option: ", 35, yPositionAxis);
+                doc.setFont("helvetica", "bold");
+                doc.text(`${item.userSelectedInput.toUpperCase()}`, 60, yPositionAxis);
+                
+                doc.setFont("helvetica", "normal");
+                doc.text("Correct Mode: ", 105, yPositionAxis);
+                doc.setFont("helvetica", "bold");
+                doc.text(`${item.correct.toUpperCase()}`, 128, yPositionAxis);
+                
+                if (item.isCorrect) {
+                    doc.setTextColor(34, 139, 34);
+                    let streakTextAppend = item.streakBonusApplied > 0 ? ` (+${item.streakBonusApplied} Streak Bonus)` : "";
+                    doc.text(`[+${item.pointsEarned} p]${streakTextAppend}`, 155, yPositionAxis);
+                } else {
+                    doc.setTextColor(178, 34, 34);
+                    doc.text(`[0 p]`, 185, yPositionAxis);
+                }
+                
+                yPositionAxis += 5;
+                doc.setDrawColor(242, 242, 242);
+                doc.line(35, yPositionAxis, 195, yPositionAxis);
+                yPositionAxis += 5;
+            });
+            
+            const safeName = userData.name.replace(/[^a-zA-Z0-9]/g, "_");
+            const safeSection = userData.section.replace(/[^a-zA-Z0-9]/g, "_");
+            doc.save(`${safeName}_${safeSection}_ZirconianThinking.pdf`);
+        }
+    </script>
+</body>
+</html>
